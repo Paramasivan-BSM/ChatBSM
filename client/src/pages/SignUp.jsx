@@ -11,20 +11,38 @@ import {
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
+    u_fullname: "",
+    u_email: "",
+    u_password: "",
   });
 
   const { signup, isSigningUp } = useAuthStore();
-  const validateForm = () => {};
-  const handleSubmit = (e) => {
-    e.preventDeafult();
+
+  const validateForm = () => {
+    if (!formData.u_fullname.trim())
+      return toast.error("Full name is required");
+    if (!formData.u_email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.u_email))
+      return toast.error("Invalid email format");
+    if (!formData.u_password) return toast.error("Password is required");
+    if (formData.u_password.length < 6)
+      return toast.error("Password must be at least 6 characters");
+
+    return true;
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const success = validateForm();
+
+    if (success === true) signup(formData);
+  };
+
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* left side */}
@@ -59,9 +77,9 @@ export const SignUp = () => {
                   type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="John Doe"
-                  value={formData.fullName}
+                  value={formData.u_fullname}
                   onChange={(e) =>
-                    setFormData({ ...formData, fullName: e.target.value })
+                    setFormData({ ...formData, u_fullname: e.target.value })
                   }
                 />
               </div>
@@ -79,9 +97,9 @@ export const SignUp = () => {
                   type="email"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="you@example.com"
-                  value={formData.email}
+                  value={formData.u_email}
                   onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
+                    setFormData({ ...formData, u_email: e.target.value })
                   }
                 />
               </div>
@@ -99,9 +117,9 @@ export const SignUp = () => {
                   type={showPassword ? "text" : "password"}
                   className={`input input-bordered w-full pl-10`}
                   placeholder="••••••••"
-                  value={formData.password}
+                  value={formData.u_password}
                   onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
+                    setFormData({ ...formData, u_password: e.target.value })
                   }
                 />
                 <button
@@ -146,7 +164,6 @@ export const SignUp = () => {
       </div>
 
       {/* right side */}
-
       <AuthImagePattern
         title="Join our community"
         subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
