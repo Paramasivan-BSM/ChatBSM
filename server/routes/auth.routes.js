@@ -11,7 +11,7 @@ import {
 import { protectRoute } from "../middlewares/auth.middleware.js";
 
 router.post("/signup", signup);
-router.post("/signin", login);
+router.post("/login", login);
 router.post("/logout", logout);
 router.get("/check", protectRoute, checkAuth);
 
