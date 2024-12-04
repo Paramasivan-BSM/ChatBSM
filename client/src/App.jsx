@@ -3,14 +3,17 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { SignUp } from "./pages/SignUp";
 import LoginPage from "./pages/LoginPage";
-import { Settings } from "./pages/Settings";
-import { Profile } from "./pages/Profile";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import { useAuthStore } from "./store/useAuthStore";
+import { useThemeStore } from "./store/useThemeStore";
+
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
   let { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  let { theme } = useThemeStore();
 
   useEffect(() => {
     checkAuth();
@@ -25,7 +28,7 @@ const App = () => {
   }
 
   return (
-    <>
+    <div data-theme={theme}>
       <Routes>
         <Route path="/" element={authUser ? <HomePage /> : <LoginPage />} />
         <Route
@@ -43,7 +46,7 @@ const App = () => {
         />
       </Routes>
       <Toaster />
-    </>
+    </div>
   );
 };
 

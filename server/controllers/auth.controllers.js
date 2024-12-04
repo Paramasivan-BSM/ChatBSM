@@ -98,25 +98,71 @@ export let logout = async (req, res) => {
   } catch (e) {}
 };
 
+// export const updateProfile = async (req, res) => {
+//   try {
+//     const { profilePic } = req.body;
+//     const userId = req.user._id;
+
+//     if (!profilePic) {
+//       return res.status(400).json({ message: "Profile pic is required" });
+//     }
+
+//     const uploadResponse = await cloudinary.uploader.upload(profilePic);
+//     const updatedUser = await User.findByIdAndUpdate(
+//       userId,
+//       { profilePic: uploadResponse.secure_url },
+//       { new: true }
+//     );
+
+//     res.status(200).json(updatedUser);
+//   } catch (error) {
+//     console.log("error in update profile:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
 export const updateProfile = async (req, res) => {
   try {
     const { profilePic } = req.body;
     const userId = req.user._id;
 
     if (!profilePic) {
-      return res.status(400).json({ message: "Profile pic is required" });
+      return res.status(400).json({ message: "Profile picture is required" });
     }
 
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    console.log("Profile Pic Received:", profilePic);
+    console.log("User ID:", userId);
+
+    // Upload to Cloudinary
+    const uploadResponse = await cloudinary.uploader
+      .upload(profilePic)
+      .catch((err) => {
+        console.error("Cloudinary upload error:", err);
+        return res
+          .status(500)
+          .json({ message: "Failed to upload image to Cloudinary" });
+      });
+
+    console.log("Cloudinary Upload Response:", uploadResponse);
+
+    // Update MongoDB
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profilePic: uploadResponse.secure_url },
+      { profilepic: uploadResponse.secure_url },
       { new: true }
     );
 
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ message: "User not found or update failed" });
+    }
+
+    console.log("Updated User Document:", updatedUser);
+
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("error in update profile:", error);
+    console.error("Error in updateProfile:", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };
