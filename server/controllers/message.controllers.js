@@ -8,7 +8,7 @@ export let getuserForSidebar = async (req, res) => {
       .find({ _id: { $ne: currentloggedUserId } })
       .select("-password");
 
-    res.status(200).json({ data: filterUsers }); // Corrected status code to 200 for success
+    res.status(200).json(filterUsers); // Corrected status code to 200 for success
   } catch (error) {
     console.error(error); // Log the error for debugging
     res

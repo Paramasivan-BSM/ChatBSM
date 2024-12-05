@@ -21,7 +21,7 @@ app.use(
   })
 );
 app.use("/api/auth", authRoute);
-app.use("/api/message", msgRoute);
+app.use("/api/messages", msgRoute);
 
 app.listen(process.env.PORT, () => {
   console.log(`http://localhost:${process.env.PORT}`);

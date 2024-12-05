@@ -10,6 +10,7 @@ import { useThemeStore } from "./store/useThemeStore";
 
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   let { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -29,6 +30,7 @@ const App = () => {
 
   return (
     <div data-theme={theme}>
+      <Navbar />
       <Routes>
         <Route path="/" element={authUser ? <HomePage /> : <LoginPage />} />
         <Route

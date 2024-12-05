@@ -8,7 +8,7 @@ import { protectRoute } from "../middlewares/auth.middleware.js";
 
 let router = express.Router();
 
-router.get("/getusers", protectRoute, getuserForSidebar);
+router.get("/users", protectRoute, getuserForSidebar);
 router.get("/:id", protectRoute, getMessages);
 
 export default router;
