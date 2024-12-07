@@ -10,7 +10,7 @@ import authRoute from "./routes/auth.routes.js";
 import msgRoute from "./routes/message.routes.js";
 import { connectDB } from "./lb/db.js";
 
-let app = express();
+import { app, io, server } from "./lb/socket.js";
 
 app.use(express.json());
 app.use(cookieParser());
@@ -23,7 +23,15 @@ app.use(
 app.use("/api/auth", authRoute);
 app.use("/api/messages", msgRoute);
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log(`http://localhost:${process.env.PORT}`);
   connectDB();
+});
+
+io.on("connection", (socket) => {
+  console.log("A user Connected", socket.id);
+
+  io.on("disconnect", () => {
+    console.log("A user disconnected", socket.id);
+  });
 });
