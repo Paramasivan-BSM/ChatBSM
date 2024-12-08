@@ -11,13 +11,13 @@ export let signup = async (req, res) => {
     if (u_password.length < 6) {
       return res
         .status(400)
-        .json({ msg: "Password length must be at least 6 characters." });
+        .json({ message: "Password length must be at least 6 characters." });
     }
 
     // Check if email already exists
     let user = await User.findOne({ email: u_email });
     if (user) {
-      return res.status(400).json({ msg: "Email already exists!" });
+      return res.status(400).json({ message: "Email already exists!" });
     }
 
     // Hashing the password
@@ -47,7 +47,7 @@ export let signup = async (req, res) => {
   } catch (e) {
     console.error(e); // Log the error for debugging
     res.status(500).json({
-      msg: "An error occurred while creating an account.",
+      message: "An error occurred while creating an account.",
       status: false,
     });
   }
@@ -61,7 +61,7 @@ export let login = async (req, res) => {
 
     if (!user) {
       return res.status(400).json({
-        msg: "Invalid Credintial",
+        message: "Invalid Credintial",
       });
     }
 
@@ -69,22 +69,22 @@ export let login = async (req, res) => {
 
     if (!IsCorrectpassword) {
       return res.status(400).json({
-        msg: "Invalid Credintial",
+        message: "Invalid Credintial",
       });
     }
 
     generateToken(user._id, res);
 
     res.status(200).json({
-      msg: "login done",
+      message: "login done",
       _id: user._id,
-      fullname: user.fullName,
+      fullName: user.fullName,
       email: user.email,
       profilepic: user.profilepic,
     });
   } catch (error) {
     res.status(500).json({
-      msg: "Internal server Error",
+      message: "Internal server Error",
     });
   }
 };
@@ -93,7 +93,7 @@ export let logout = async (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({
-      msg: "Logout done!",
+      message: "Logout done!",
     });
   } catch (e) {}
 };
